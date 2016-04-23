@@ -7,12 +7,16 @@ import java.util.List;
 
 public class Lexer {
     private static final List<Character> OPERATORS = Arrays.asList('+', '-', '*', '/');
-    private static final HashMap<Character, TokenType> OPERATOR_TYPES = new HashMap<Character, TokenType>() {{
+    private static final List<Character> PARENS = Arrays.asList('(', ')');
+    private static final HashMap<Character, TokenType> TOKEN_TYPES = new HashMap<Character, TokenType>() {{
         put('+', TokenType.PLUS);
         put('-', TokenType.MINUS);
         put('*', TokenType.TIMES);
         put('/', TokenType.DIVIDE);
+        put('(', TokenType.LEFT_PAREN);
+        put(')', TokenType.RIGHT_PAREN);
     }};
+
     private final String source;
     private int index = 0;
 
@@ -33,10 +37,10 @@ public class Lexer {
             if (Character.isDigit(current())) {
                 String number = nextNumber();
                 return number(Integer.parseInt(number));
-            } else if (isOperator(current())) {
-                char operator = current();
+            } else if (isOperator(current()) || isParen(current())) {
+                char symbol = current();
                 next(1);
-                return operator(operator);
+                return token(symbol);
             } else if (Character.isSpaceChar(current())) {
                 next(1);
                 continue;
@@ -46,8 +50,12 @@ public class Lexer {
         throw new IllegalStateException("end of source");
     }
 
-    public static Token operator(char operator) {
-        return new Token(OPERATOR_TYPES.get(operator));
+    private boolean isParen(char character) {
+        return PARENS.contains(character);
+    }
+
+    public static Token token(char symbol) {
+        return new Token(TOKEN_TYPES.get(symbol));
     }
 
     public static Token number(int value) {
