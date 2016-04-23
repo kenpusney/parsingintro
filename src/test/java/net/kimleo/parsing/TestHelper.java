@@ -25,4 +25,10 @@ public class TestHelper {
         parse(source).accept(generator);
         return generator.SSAStatement;
     }
+
+    public static List<String> stackGen(String source) {
+        StackOperationGenerator generator = new StackOperationGenerator();
+        parse(source).accept(generator);
+        return generator.operations;
+    }
 }
