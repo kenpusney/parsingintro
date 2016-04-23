@@ -7,7 +7,7 @@ import java.util.Collections;
 
 import static net.kimleo.parsing.lexer.Lexer.number;
 import static net.kimleo.parsing.lexer.Lexer.token;
-import static net.kimleo.parsing.lexer.TestHelper.lex;
+import static net.kimleo.parsing.TestHelper.lex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
