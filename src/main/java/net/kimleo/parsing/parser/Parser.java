@@ -27,7 +27,7 @@ public class Parser {
         if (accept(PLUS) || accept(MINUS)) {
             rewind(1);
             char operator = operator();
-            Node right = term();
+            Node right = expression();
             return new Expression(operator, left, right);
         }
         return left;
@@ -38,7 +38,7 @@ public class Parser {
         if (accept(TIMES) || accept(DIVIDE)) {
             rewind(1);
             char operator = operator();
-            Node right = factor();
+            Node right = term();
             return new Expression(operator, left, right);
         }
         return left;

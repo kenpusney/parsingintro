@@ -46,6 +46,25 @@ public class ParserTest {
         assertEquals(node, funcall("max", Arrays.asList(num(1), num(2))));
     }
 
+    @Test
+    public void parse_long_expression() throws Exception {
+        Node node = parse("1 + 2 + 3 + 4 + 5 * 6 * 7 + 8 * 9");
+
+        assertEquals(node,
+                expr('+',
+                        num(1),
+                        expr('+',
+                                num(2),
+                                expr('+',
+                                        num(3),
+                                        expr('+',
+                                                num(4),
+                                                expr('+',
+                                                        expr('*', num(5),
+                                                                expr('*', num(6), num(7))),
+                                                        expr('*', num(8), num(9))))))));
+    }
+
     private FunCall funcall(String name, List<Node> arguments) {
         return new FunCall(new Identifier(name), arguments);
     }
