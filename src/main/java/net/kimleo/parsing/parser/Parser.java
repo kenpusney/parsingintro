@@ -1,14 +1,14 @@
 package net.kimleo.parsing.parser;
 
-import net.kimleo.parsing.ast.Expression;
-import net.kimleo.parsing.ast.Node;
-import net.kimleo.parsing.ast.NumberLiteral;
+import net.kimleo.parsing.ast.*;
 import net.kimleo.parsing.lexer.Token;
 import net.kimleo.parsing.lexer.TokenType;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static net.kimleo.parsing.lexer.TokenType.RIGHT_PAREN;
+import static net.kimleo.parsing.lexer.TokenType.*;
 
 public class Parser {
     private final List<Token> tokens;
@@ -24,7 +24,7 @@ public class Parser {
 
     private Node expression() {
         Node left = term();
-        if (accept(TokenType.PLUS) || accept(TokenType.MINUS)) {
+        if (accept(PLUS) || accept(MINUS)) {
             rewind(1);
             char operator = operator();
             Node right = term();
@@ -35,7 +35,7 @@ public class Parser {
 
     private Node term() {
         Node left = factor();
-        if (accept(TokenType.TIMES) || accept(TokenType.DIVIDE)) {
+        if (accept(TIMES) || accept(DIVIDE)) {
             rewind(1);
             char operator = operator();
             Node right = factor();
@@ -45,13 +45,36 @@ public class Parser {
     }
 
     private Node factor() {
-        if (accept(TokenType.LEFT_PAREN)) {
+        if (accept(LEFT_PAREN)) {
             Node expr = expression();
             expect(RIGHT_PAREN);
             return expr;
+        } else if (accept(ID)) {
+            rewind(1);
+            return funCall();
         } else {
             return number();
         }
+    }
+
+    private Node funCall() {
+        Node id = identifier();
+        expect(LEFT_PAREN);
+        ArrayList<Node> nodes = new ArrayList<>();
+        nodes.add(expression());
+        while (accept(COMMA)) {
+            nodes.add(expression());
+        }
+        expect(RIGHT_PAREN);
+        return new FunCall(id, nodes);
+    }
+
+    private Node identifier() {
+        Token token = current();
+        if (accept(ID)) {
+            return new Identifier((String) token.value);
+        }
+        throw unexpected(token);
     }
 
     private void expect(TokenType tokenType) {
@@ -72,7 +95,7 @@ public class Parser {
 
     private Node number() {
         Token token = current();
-        if(accept(TokenType.NUMBER)) {
+        if (accept(NUMBER)) {
             return new NumberLiteral((Integer) token.value);
         }
         throw unexpected(token);

@@ -15,7 +15,9 @@ public class Lexer {
         put('/', TokenType.DIVIDE);
         put('(', TokenType.LEFT_PAREN);
         put(')', TokenType.RIGHT_PAREN);
+        put(',', TokenType.COMMA);
     }};
+    public static final List<Character> SEPARATORS = Arrays.asList(',');
 
     private final String source;
     private int index = 0;
@@ -37,21 +39,54 @@ public class Lexer {
             if (Character.isDigit(current())) {
                 String number = nextNumber();
                 return number(Integer.parseInt(number));
-            } else if (isOperator(current()) || isParen(current())) {
+            } else if (isOperator(current()) || isParen(current()) || isSeparator(current())) {
                 char symbol = current();
                 next(1);
                 return token(symbol);
             } else if (Character.isSpaceChar(current())) {
                 next(1);
                 continue;
+            } else if (Character.isAlphabetic(current())) {
+                String id = nextIdentifier();
+                return id(id);
             }
             throw unknown(current());
         }
         throw new IllegalStateException("end of source");
     }
 
+    private String nextIdentifier() {
+        StringBuilder sb = new StringBuilder();
+        while (!EOF() && (Character.isAlphabetic(current()) || Character.isDigit(current()))) {
+            sb.append(current());
+            next(1);
+        }
+        return sb.toString();
+    }
+
+    private String nextNumber() {
+        StringBuilder sb = new StringBuilder();
+        while (!EOF() && Character.isDigit(current())) {
+            sb.append(current());
+            next(1);
+        }
+        return sb.toString();
+    }
+
+    private boolean isSeparator(char current) {
+        return SEPARATORS.contains(current);
+    }
+
     private boolean isParen(char character) {
         return PARENS.contains(character);
+    }
+
+    private boolean isOperator(char current) {
+        return OPERATORS.contains(current);
+    }
+
+    public static Token id(String id) {
+        return new Token(TokenType.ID, id);
     }
 
     public static Token token(char symbol) {
@@ -62,21 +97,8 @@ public class Lexer {
         return new Token(TokenType.NUMBER, value);
     }
 
-    private boolean isOperator(char current) {
-        return OPERATORS.contains(current);
-    }
-
     private LexerException unknown(char character) {
         return new LexerException("Unknown character: " + character);
-    }
-
-    private String nextNumber() {
-        StringBuilder sb = new StringBuilder();
-        while (!EOF() && Character.isDigit(current())) {
-            sb.append(current());
-            next(1);
-        }
-        return sb.toString();
     }
 
     private void next(int i) {

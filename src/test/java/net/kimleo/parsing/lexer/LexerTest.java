@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static net.kimleo.parsing.lexer.Lexer.id;
 import static net.kimleo.parsing.lexer.Lexer.number;
 import static net.kimleo.parsing.lexer.Lexer.token;
 import static net.kimleo.parsing.TestHelper.lex;
@@ -33,5 +34,10 @@ public class LexerTest {
                         token(')'),
                         token('*'),
                         number(2)));
+    }
+
+    @Test
+    public void lex_id() throws Exception {
+        assertEquals(lex("max abc123"), Arrays.asList(id("max"), id("abc123")));
     }
 }
