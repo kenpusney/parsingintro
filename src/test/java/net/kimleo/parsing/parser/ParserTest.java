@@ -24,8 +24,15 @@ public class ParserTest {
         assertEquals(node, expr('+', num(1), num(1)));
     }
 
-    private Expression expr(char operator, Node right, Node left) {
-        return new Expression(operator,  left, right);
+    @Test
+    public void parse_complex_expression() throws Exception {
+        Node node = parse("1 * 2 + 3");
+
+        assertEquals(node, expr('+', expr('*', num(1), num(2)), num(3)));
+    }
+
+    private Expression expr(char operator, Node left, Node right) {
+        return new Expression(operator, left, right);
     }
 
     private NumberLiteral num(int value) {

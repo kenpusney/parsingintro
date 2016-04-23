@@ -21,8 +21,19 @@ public class Parser {
     }
 
     private Node expression() {
-        Node left = number();
+        Node left = term();
         if (accept(TokenType.PLUS) || accept(TokenType.MINUS)) {
+            rewind(1);
+            char operator = operator();
+            Node right = term();
+            return new Expression(operator, left, right);
+        }
+        return left;
+    }
+
+    private Node term() {
+        Node left = number();
+        if (accept(TokenType.TIMES) || accept(TokenType.DIVIDE)) {
             rewind(1);
             char operator = operator();
             Node right = number();
