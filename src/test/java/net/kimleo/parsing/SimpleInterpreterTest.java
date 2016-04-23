@@ -1,13 +1,9 @@
 package net.kimleo.parsing;
 
-import net.kimleo.parsing.ast.Expression;
-import net.kimleo.parsing.ast.Node;
-import net.kimleo.parsing.ast.NumberLiteral;
 import org.junit.Test;
 
 import static net.kimleo.parsing.TestHelper.interpret;
-import static net.kimleo.parsing.TestHelper.parse;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class SimpleInterpreterTest {
     @Test
