@@ -1,7 +1,7 @@
 package net.kimleo.parsing.ast;
 
 public class NumberLiteral implements Node {
-    private final int value;
+    public final int value;
 
     public NumberLiteral(int value) {
         this.value = value;

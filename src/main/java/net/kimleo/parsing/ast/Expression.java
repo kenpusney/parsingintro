@@ -1,9 +1,9 @@
 package net.kimleo.parsing.ast;
 
 public class Expression implements Node {
-    private final char operator;
-    private final Node left;
-    private final Node right;
+    public final char operator;
+    public final Node left;
+    public final Node right;
 
     public Expression(char operator, Node left, Node right) {
         this.operator = operator;

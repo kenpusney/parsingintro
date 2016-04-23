@@ -15,4 +15,8 @@ public class TestHelper {
     public static Node parse(String source) {
         return new Parser(lex(source)).run();
     }
+
+    public static Integer interpret(String source) {
+        return new Parser(lex(source)).run().accept(new SimpleInterpreter());
+    }
 }
