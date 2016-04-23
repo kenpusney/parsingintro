@@ -19,4 +19,10 @@ public class TestHelper {
     public static Integer interpret(String source) {
         return new Parser(lex(source)).run().accept(new SimpleInterpreter());
     }
+
+    public static SSAGenerator generate(String source) {
+        SSAGenerator generator = new SSAGenerator();
+        parse(source).accept(generator);
+        return generator;
+    }
 }
