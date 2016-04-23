@@ -8,6 +8,8 @@ import net.kimleo.parsing.lexer.TokenType;
 
 import java.util.List;
 
+import static net.kimleo.parsing.lexer.TokenType.RIGHT_PAREN;
+
 public class Parser {
     private final List<Token> tokens;
     private int index = 0;
@@ -32,14 +34,30 @@ public class Parser {
     }
 
     private Node term() {
-        Node left = number();
+        Node left = factor();
         if (accept(TokenType.TIMES) || accept(TokenType.DIVIDE)) {
             rewind(1);
             char operator = operator();
-            Node right = number();
+            Node right = factor();
             return new Expression(operator, left, right);
         }
         return left;
+    }
+
+    private Node factor() {
+        if (accept(TokenType.LEFT_PAREN)) {
+            Node expr = expression();
+            expect(RIGHT_PAREN);
+            return expr;
+        } else {
+            return number();
+        }
+    }
+
+    private void expect(TokenType tokenType) {
+        if (!accept(tokenType)) {
+            throw unexpected(current());
+        }
     }
 
     private char operator() {

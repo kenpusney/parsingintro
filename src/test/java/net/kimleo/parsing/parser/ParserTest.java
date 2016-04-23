@@ -31,6 +31,13 @@ public class ParserTest {
         assertEquals(node, expr('+', expr('*', num(1), num(2)), num(3)));
     }
 
+    @Test
+    public void parse_with_parens() throws Exception {
+        Node node = parse("1 * (2 + 3)");
+
+        assertEquals(node, expr('*', num(1), expr('+', num(2), num(3))));
+    }
+
     private Expression expr(char operator, Node left, Node right) {
         return new Expression(operator, left, right);
     }
