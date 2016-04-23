@@ -55,7 +55,7 @@ public class Lexer {
     }
 
     public static Token token(char symbol) {
-        return new Token(TOKEN_TYPES.get(symbol));
+        return new Token(TOKEN_TYPES.get(symbol), symbol);
     }
 
     public static Token number(int value) {

@@ -27,4 +27,9 @@ public class NumberLiteral implements Node {
     public int hashCode() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return String.format("num(%d)", value);
+    }
 }

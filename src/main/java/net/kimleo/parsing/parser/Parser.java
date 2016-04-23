@@ -1,5 +1,6 @@
 package net.kimleo.parsing.parser;
 
+import net.kimleo.parsing.ast.Expression;
 import net.kimleo.parsing.ast.Node;
 import net.kimleo.parsing.ast.NumberLiteral;
 import net.kimleo.parsing.lexer.Token;
@@ -20,7 +21,24 @@ public class Parser {
     }
 
     private Node expression() {
-        return number();
+        Node left = number();
+        if (accept(TokenType.PLUS) || accept(TokenType.MINUS)) {
+            rewind(1);
+            char operator = operator();
+            Node right = number();
+            return new Expression(operator, left, right);
+        }
+        return left;
+    }
+
+    private char operator() {
+        Token token = current();
+        next(1);
+        return (char) token.value;
+    }
+
+    private void rewind(int step) {
+        index -= step;
     }
 
     private Node number() {
@@ -37,7 +55,7 @@ public class Parser {
     }
 
     private boolean accept(TokenType tokenType) {
-        if (current().tokenType == tokenType) {
+        if (!EOF() && current().tokenType == tokenType) {
             next(1);
             return true;
         } else {
