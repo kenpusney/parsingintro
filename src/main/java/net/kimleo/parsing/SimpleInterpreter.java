@@ -1,11 +1,19 @@
 package net.kimleo.parsing;
 
-import net.kimleo.parsing.ast.Expression;
-import net.kimleo.parsing.ast.Node;
-import net.kimleo.parsing.ast.NumberLiteral;
-import net.kimleo.parsing.ast.Visitor;
+import net.kimleo.parsing.ast.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Function;
 
 public class SimpleInterpreter implements Visitor<Integer> {
+    private static final HashMap<String, Function<List<Integer>, Integer>> FUNCTIONS =
+            new HashMap<String, Function<List<Integer>, Integer>>() {{
+                put("max", (ints) -> ints.stream().max(Integer::compareTo).get());
+                put("pow", (ints) -> new Double(Math.pow(ints.get(0), ints.get(1))).intValue());
+            }} ;
+
     @Override
     public Integer visit(Node node) {
         return node.accept(this);
@@ -30,4 +38,23 @@ public class SimpleInterpreter implements Visitor<Integer> {
                 throw new UnsupportedOperationException("Unknown operator " + expr.operator);
         }
     }
+
+    @Override
+    public Integer visit(Identifier id) {
+        return null;
+    }
+
+    @Override
+    public Integer visit(FunCall funCall) {
+        String fnName = ((Identifier) funCall.name).name;
+
+        List<Integer> args = new ArrayList<>();
+        for (Node arg : funCall.argument) {
+            args.add(arg.accept(this));
+        }
+
+        return FUNCTIONS.get(fnName).apply(args);
+    }
+
+
 }

@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 public class FunCall implements Node {
 
-    private final Node name;
-    private final List<Node> argument;
+    public final Node name;
+    public final List<Node> argument;
 
     public FunCall(Node name, List<Node> argument) {
         this.name = name;

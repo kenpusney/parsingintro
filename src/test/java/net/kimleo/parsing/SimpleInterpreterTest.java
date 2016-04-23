@@ -15,10 +15,14 @@ public class SimpleInterpreterTest {
         int value = interpret("1 + 2 * 3");
         assertEquals(value, 7);
     }
-    @Test
-    public void parse_expression() throws Exception {
-        Node node = parse("1 + 1");
 
-        assertEquals(node, new Expression('+', new NumberLiteral(1), new NumberLiteral(1)));
+    @Test
+    public void test_fun_call() throws Exception {
+        int value = interpret("max(1, 2, 4, 10, 6, 8)");
+
+        assertEquals(value, 10);
+
+        value = interpret("pow(2, 1 + (2 * max(1, 2)))");
+        assertEquals(value, 32);
     }
 }
