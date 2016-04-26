@@ -41,6 +41,11 @@ public class JavaClassCompilerTest {
 
         byte[] code = compiler.generate();
 
+        File file = new File("gen/" + className + ".class");
+        FileOutputStream stream = new FileOutputStream(file);
+        stream.write(code);
+        stream.close();
+
         Class aClass = new TestClassLoader().defineClass(className, code);
 
         return (Evaluable) aClass.newInstance();
